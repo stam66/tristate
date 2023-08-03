@@ -209,20 +209,7 @@ setProp indicatorColor pColor
     updateVisualControls
 end indicatorColor
 
-//width-to-height ratio
-getProp ratio
-    local tRatio
-    put the ratio of me into tRatio
-    if tRatio is empty then put 2.5 into tRatio
-    return tRatio
-end ratio
-
-setProp ratio pRatio
-    set the ratio of me to pRatio
-    layoutVisualControls
-end ratio
-
-//uValue
+//switchValue
 getProp switchValue
     local tValue
     put the switchValue of me into tValue
