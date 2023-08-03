@@ -1,4 +1,4 @@
-﻿script "com.sk.widget.tristate102"
+﻿script "com.sk.widget.tristate"
 /**
 Title: Tri-state switch 1.0.2
 
@@ -151,16 +151,26 @@ end resizeControl
 
 private command updateVisualControls
     if sHasCreatedVisuals then exit updateVisualControls
-    set the backgroundColor control id sBackroundID to the centerColor of me
+    switch the switchValue of me
+        case "Left"
+            set the backgroundColor of control id sBackroundID to the leftColor of me
+            break
+        case "Center"
+            set the backgroundColor of control id sBackroundID to the centerColor of me
+            break
+        case "Right"
+            set the backgroundColor of control id sBackroundID to the rightColor of me
+            break
+    end switch
     set the backgroundColor of control id sIndicatorID to the indicatorColor of me
 end updateVisualControls
 
 private command createVisualControls
     if sHasCreatedVisuals then exit createVisualControls
-    if the width of me is 0 or the width of me is empty then // added because it was generating zero-width widget
-     set the width of me to 70
-     set the height of me to 35
-    end if
+    --    if the width of me is 0 or the width of me is empty then // added because it was generating zero-width widget
+    set the width of me to 70
+    set the height of me to 35
+    --end if
     
     create graphic "background" in me
     put the id of it into sBackroundID
@@ -185,8 +195,8 @@ private command createVisualControls
     put 0 into tInnerGlow["spread"]
     set the innerGlow of control id sIndicatorID to tInnerGlow
     
-    layoutVisualControls
     put true into sHasCreatedVisuals
+    layoutVisualControls
 end createVisualControls
 
 private command layoutVisualControls
