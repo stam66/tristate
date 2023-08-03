@@ -1,5 +1,5 @@
 # Tri-state control widget
-LiveCode widget - ti-state control (requires LC 10 DP5 or higher)
+LiveCode widget - tri-state control (requires LC 10 DP5 or higher)
 Version 1.0.0
 
 <img width="323" alt="Screenshot 2023-08-03 at 01 14 55" src="https://github.com/stam66/tristate/assets/5677273/e12d496b-d29d-426f-8126-e2ba32ad7b23">
