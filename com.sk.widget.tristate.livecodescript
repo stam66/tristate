@@ -1,10 +1,10 @@
 script "com.sk.tristate.livecodescript"
 /**
-Title: Tri-state switch 1.0.3
+Title: Tri-state switch 1.0.4
 
 Author: Stam Kapetanakis
 
-Version: 1.0.3 
+Version: 1.0.4
 
 Type: Widget
 
@@ -497,12 +497,26 @@ private command formatTextFields
 end formatTextFields
 
 private command formatFieldText pSize, pControlID
-    set the textColor of control id pControlID to textColorForBackground(the backgroundColor of control id sBackroundID)
-    set the textSize of control id pControlID to pSize
-    set the topMargin of control id pControlID to \
-          (round((the height of control id pControlID - the formattedHeight of control id pControlID)/2 \
-          + the formattedHeight of control id pControlID / 5))
+    local tTextHeight, tFieldY, tFormatRect, tFormatheight, tFormatHalfHeight, tCurrFormatTop, tCenterField_To_TopTextDiff
+   set the textColor of control id pControlID to textColorForBackground(the backgroundColor of control id sBackroundID)
+   set the textSize of control id pControlID to pSize
+ 
+   ## trying to keep text vertially centered
+   put the effective textHeight of control id pControlID into tTextHeight
+   put item 2 of the loc of control id pControlID into tfieldY
+   
+   put the formattedRect of line 1 to - 1 of control id pControlID into tFormatRect
+   put item 4 of tFormatRect - item 2 of tFormatRect into tFormatHeight
+   put tFormatHeight div 2 into tFormatHalfHeight
+   
+   put item 2 of tFormatRect into tCurrFormatTop
+   put tfieldY - tCurrFormatTop into tCenterField_To_TopTextDiff
+   
+   set the topMargin of control id pControlID to the topMargin of control id pControlID \
+         + tCenterField_To_TopTextDiff - tFormatHalfHeight
+   ## end trying to keep text vertically centered
 end formatFieldText
+
 
 private command updateIndicatorForValue
     local tX
@@ -530,8 +544,6 @@ private command updateIndicatorForValue
 end updateIndicatorForValue
 
 on mouseDown
-	if "groupbehavior" is in the long name of the target then exit to top -- stop behavior stack from firing mouseDowns, remove in widget
-
 	if the mouseLoc is within the rect of control id sIndicatorID then
 		put true into sClickedIndicator
 		put the mouseH into sMouseX
@@ -541,8 +553,6 @@ end mouseDown
 
 on mouseUp pKey
 	local tSegmentClicked, tRect, tR1, tR2, tR3, t3
-	if "groupbehavior" is in the long name of the target then exit to top -- stop behavior stack from firing mouseUps, remove in widget
-
 	if sClickedIndicator then   // drag indicator 1 step in drag direction
 		local tValue
 		put the switchValue of me into tValue
@@ -580,21 +590,22 @@ on mouseUp pKey
 end mouseUp
 
 on mouseRelease
-	local tValue
-	if "groupbehavior" is in the long name of the target then exit to top
-	put the switchValue of me into tValue
-	if the mouseH - sMouseX > 0 and tValue is "Left" then // go right
-		put "Center" into tValue
-	else if the mouseH - sMouseX > 0 and tValue is "Center" then // go right
-		put "Right" into tValue
-	else if the mouseH - sMouseX < 0 and tValue is "Right" then //go left
-		put "Center" into tValue
-	else if the mouseH - sMouseX < 0 and tValue is "Center" then //go left
-		put "Left" into tValue
-	end if
-	set the switchValue of me to tValue
-	put false into sClickedIndicator
-	put empty into sMouseX
+    local tValue
+    if not sClickedIndicator then exit to top // do not allow drag action if not initiated by clicking the indicator
+    if "groupbehavior" is in the long name of the target then exit to top
+    put the switchValue of me into tValue
+    if the mouseH - sMouseX > 0 and tValue is "Left" then // go right
+        put "Center" into tValue
+    else if the mouseH - sMouseX > 0 and tValue is "Center" then // go right
+        put "Right" into tValue
+    else if the mouseH - sMouseX < 0 and tValue is "Right" then //go left
+        put "Center" into tValue
+    else if the mouseH - sMouseX < 0 and tValue is "Center" then //go left
+        put "Left" into tValue
+    end if
+    set the switchValue of me to tValue
+    put false into sClickedIndicator
+    put empty into sMouseX
 end mouseRelease
 
 # return dark textColor for light backgrounds & vice versa
