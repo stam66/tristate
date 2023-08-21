@@ -1,7 +1,7 @@
 # Tri-state control widget
 LiveCode widget - tri-state control (requires LC 10 DP5 or higher)
 
-### Changes in version 1.0.4 <br>
+### Changes in version 1.0.4: <br>
 - thanks to @BerndN for improving the vertical text align - code modified to include his algorithm
 - thanks to @BerndN for spotting inconsistent drag behavior - now fixed (drag will only happen if dragging from the indicator, not the background)
 - minor code cleanup
