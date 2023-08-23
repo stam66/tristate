@@ -1,30 +1,44 @@
 script "com.sk.tristate.livecodescript"
 /**
-Title: Tri-state switch 1.0.4
+Title: Tri-state switch 1.0.41
 
 Author: Stam Kapetanakis
 
-Version: 1.0.4
+Version: 1.0.41
 
 Type: Widget
 
 SVGIcon: M75.1875 98.9688C60.0318 98.9687 47.7188 111.251 47.7188 126.406L47.7188 128.688C47.7187 143.843 60.0318 156.125 75.1875 156.125L152.406 156.125C167.562 156.125 179.844 143.843 179.844 128.688L179.844 126.406C179.844 111.251 167.562 98.9688 152.406 98.9688L75.1875 98.9688ZM113.781 101.062C128.417 101.062 140.281 112.927 140.281 127.562C140.281 142.198 128.417 154.063 113.781 154.062C99.1457 154.062 87.2813 142.198 87.2812 127.562C87.2812 112.927 99.1457 101.062 113.781 101.062Z
 
-Summary: Switch control with 3 states
+Summary: Switch control with 3 states, optional inline labels
 
 Description:
-A switch control with 3 states (left/center/right)
+An alternative to the built-in switch widget which offers a trinary instead of the default binary choice.
 
-In edit mode, resize in IDE to set size and aspect ratio. 
-Assign a value (left, center or right) setting the switchValue either by code or in property panel.
-Click on each 3rd of the widget to set switch in browse mode. Drag indicator to move 1 step in drag direction.
-Each switchValue can set a different color to the widget.
-Colours are set in the property panel or by code (set the leftColor, centerColor, rightColor and indicatorColor respectively).
+Optionally inline labels can be displayed. Label is sized by widget height within constraints of max/min text size properites (text panel of property inpector) and textColor is appropriate to background luminosity (dark text on light backgrounds and vice versa).
+Different background colours can be assigned depending on state (left/center/right)
+A tristateChanged message is sent up the object hierarchy if change needs to be captured for processing
+Properties are settable directly in the Basic, Contents, Colors and Text panels of it's property inspector.
+Widget designed with the new script widget and requires LiveCode 10.0 DP5 or higher. 
+Use the Extension Manager (Tools menu) to install the widget (the .lce file). After installation an new icon appears in the Tools palette
 
-New in 1.0.3: Optionally assign labels. In the middle/neutral state, there are 1 labels (ideally 1 char only) either side of the indicator.
-In left or right postions a full label is displayed - however bounts are not checked so resize as needed.
-The text is dynamically resized by height of widget, constrained by a min and max set in preferences.
-textColor is dynamically changed to light or dark depending on if background is dark or light respectively
+Properties are all accessible in the Property Inspector:
+switchValue     the position of the indicator (left/center/right)
+leftColor       the background colour assigned when the switch is in the left postion
+rightColor      the background colour assigned when the switch is in the right postion
+centerColor     the background colour assigned when the switch is in the center postion
+indicatorColor  the background colour of the indicator
+
+hasLabels       boolean to display or hide text labels
+leftText        the text of the label displayed when the switch is in the left position
+rigthText       the text of the label displayed when the switch is in the right position
+leftTextSmall   the (usually 1 char) text displayed to the left of the switch when it's in the center position
+rightTextSmall  the (usually 1 char) text displayed to the right of the switch when it's in the center position
+minTextSize     the minimum font size that will automatically scale with height of widget
+maxTextSize     the maximum font size that will automatically scale with height of widget
+
+
+Sourcecode and widget available under MIT licence at https://github.com/stam66/tristate
 */
 
 getProp propertyMetadata[pProperty]
@@ -138,7 +152,7 @@ local sBackroundID, sIndicatorID, sTextLeftID, sTextRightID, sTextLongID
 getProp rightColor
 	local tColor
 	put the rightColor of me into tColor
-	if tColor is empty then put "#C90076" into tColor
+	if tColor is empty then put "201,0,118" into tColor
 	return tColor
 end rightColor
 
@@ -151,7 +165,7 @@ end rightColor
 getProp leftColor
 	local tColor
 	put the leftColor of me into tColor
-	if tColor is empty then put "#2986CC" into tColor
+	if tColor is empty then put "41,134,204" into tColor
 	return tColor
 end leftColor
 
@@ -164,7 +178,7 @@ end leftColor
 getProp centerColor
 	local tColor
 	put the centerColor of me into tColor
-	if tColor is empty then put "#F4F6F7" into tColor
+	if tColor is empty then put "244,246,247" into tColor
 	return tColor
 end centerColor
 
@@ -177,7 +191,7 @@ end centerColor
 getProp indicatorColor
 	local tColor
 	put the indicatorColor of me into tColor
-	if tColor is empty then put "#E6E8E8" into tColor
+	if tColor is empty then put "230,232,232" into tColor
 	return tColor
 end indicatorColor
 
@@ -354,7 +368,7 @@ private command createVisualControls
     put 0 into tInnerGlow["spread"]
     set the innerGlow of control id sIndicatorID to tInnerGlow
     
-    set the switchValue of me to "center"
+    set the switchValue of me to the switchValue of me ## error caught by @BerndN
     
     if the width of me is empty or the width of me is 0 then
         set the width of me to 120
@@ -367,7 +381,7 @@ private command createVisualControls
     layoutVisualControls
 end createVisualControls
 
-private command layoutVisualControls ## fix by Bernd to stop the mesmerising wandering of the indicator...
+private command layoutVisualControls ## fix by @BerndN to stop the mesmerising wandering of the indicator...
 	if not sHasCreatedVisuals then exit layoutVisualControls
 
 	local tRect, tDiameter
