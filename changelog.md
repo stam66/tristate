@@ -1,3 +1,7 @@
+### Changes in version 1.0.41 <br>
+- thanks to @BerndD who spotted that the switchValue was being overwritten at initialisation and resetting the widget to neutral position on startup. This is now fixed.
+- Cleaned up documentation
+
 ### Changes in version 1.0.4: <br>
 - thanks to @BerndN for improving the vertical text align - code modified to include his algorithm
 - thanks to @BerndN for spotting inconsistent drag behavior - now fixed (drag will only happen if dragging from the indicator, not the background)
