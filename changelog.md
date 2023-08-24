@@ -1,3 +1,6 @@
+### Changes in version 1.0.42 <br>
+Minor update to include code by @BerndN for improvements in Properties documentation for the LiveCode Dictionary
+
 ### Changes in version 1.0.41 <br>
 - thanks to @BerndD who spotted that the switchValue was being overwritten at initialisation and resetting the widget to neutral position on startup. This is now fixed.
 - Cleaned up documentation
