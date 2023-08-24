@@ -1,11 +1,9 @@
-script "com.sk.tristate.livecodescript"
+script "com.sk.widget.tristate"
 /**
-Title: Tri-state switch 1.0.41
+Title: Tri-state switch 1.0.42
 
 Author: Stam Kapetanakis
-
-Version: 1.0.41
-
+Version: 1.0.42
 Type: Widget
 
 SVGIcon: M75.1875 98.9688C60.0318 98.9687 47.7188 111.251 47.7188 126.406L47.7188 128.688C47.7187 143.843 60.0318 156.125 75.1875 156.125L152.406 156.125C167.562 156.125 179.844 143.843 179.844 128.688L179.844 126.406C179.844 111.251 167.562 98.9688 152.406 98.9688L75.1875 98.9688ZM113.781 101.062C128.417 101.062 140.281 112.927 140.281 127.562C140.281 142.198 128.417 154.063 113.781 154.062C99.1457 154.062 87.2813 142.198 87.2812 127.562C87.2812 112.927 99.1457 101.062 113.781 101.062Z
@@ -13,32 +11,16 @@ SVGIcon: M75.1875 98.9688C60.0318 98.9687 47.7188 111.251 47.7188 126.406L47.718
 Summary: Switch control with 3 states, optional inline labels
 
 Description:
-An alternative to the built-in switch widget which offers a trinary instead of the default binary choice.
+An alternative to the built-in switch widget which offers a trinary instead of the default binary choice. 
 
-Optionally inline labels can be displayed. Label is sized by widget height within constraints of max/min text size properites (text panel of property inpector) and textColor is appropriate to background luminosity (dark text on light backgrounds and vice versa).
-Different background colours can be assigned depending on state (left/center/right)
-A tristateChanged message is sent up the object hierarchy if change needs to be captured for processing
-Properties are settable directly in the Basic, Contents, Colors and Text panels of it's property inspector.
-Widget designed with the new script widget and requires LiveCode 10.0 DP5 or higher. 
-Use the Extension Manager (Tools menu) to install the widget (the .lce file). After installation an new icon appears in the Tools palette
+Optionally inline labels can be displayed - show/hide with the <b>hasLabels</b> boolean property. 
 
-Properties are all accessible in the Property Inspector:
-switchValue     the position of the indicator (left/center/right)
-leftColor       the background colour assigned when the switch is in the left postion
-rightColor      the background colour assigned when the switch is in the right postion
-centerColor     the background colour assigned when the switch is in the center postion
-indicatorColor  the background colour of the indicator
+A <b>tristateChanged</b> message is sent up the object hierarchy if change needs to be captured for processing
+Properties are settable directly in the Basic, Contents, Colors and Text panels of its property inspector.
 
-hasLabels       boolean to display or hide text labels
-leftText        the text of the label displayed when the switch is in the left position
-rigthText       the text of the label displayed when the switch is in the right position
-leftTextSmall   the (usually 1 char) text displayed to the left of the switch when it's in the center position
-rightTextSmall  the (usually 1 char) text displayed to the right of the switch when it's in the center position
-minTextSize     the minimum font size that will automatically scale with height of widget
-maxTextSize     the maximum font size that will automatically scale with height of widget
-
-
+Widget designed with the new script widget and requires <b>LiveCode 10.0 DP5 or higher</b>. 
 Sourcecode and widget available under MIT licence at https://github.com/stam66/tristate
+
 */
 
 getProp propertyMetadata[pProperty]
@@ -99,7 +81,7 @@ getProp propertyMetadata[pProperty]
                   "editor": "com.livecode.pi.text", \
                   "section": "contents"}
             break
-            		
+              
         case "leftTextSmall"
             return { \
                   "default": "L", \
@@ -107,7 +89,7 @@ getProp propertyMetadata[pProperty]
                   "editor": "com.livecode.pi.text", \
                   "section": "contents"}
             break
-            		
+              
         case "rightText"
             return { \
                   "default" : "Right", \
@@ -115,7 +97,7 @@ getProp propertyMetadata[pProperty]
                   "editor": "com.livecode.pi.text", \
                   "section": "contents"}
             break
-            		
+              
         case "rightTextSmall"
             return { \
                   "default": "R", \
@@ -123,7 +105,7 @@ getProp propertyMetadata[pProperty]
                   "editor": "com.livecode.pi.text", \
                   "section": "contents"}
             break
-            			
+               
         case "maxTextSize"
             return { \
                   "default": "30", \
@@ -148,149 +130,291 @@ local sHasCreatedVisuals, sMouseX, sClickedIndicator
 local sBackroundID, sIndicatorID, sTextLeftID, sTextRightID, sTextLongID
 
 ########################### PROPERTIES ###########################
+
+/**
+Type: Property
+
+Summary: The color of the right background
+
+Syntax: get the rightColor of <widget>
+set the rightColor of <widget> to tColor
+
+Example:put the rightColor of widget "myWidget" into tColor
+set the rightColor of widget "myWidget" to 120,180,190
+Value: a valid color (RGB, Hex, ColorName) or empty
+Description: Use <rightColor> to get or set the backgroundColor of right background
+*/
 // rightColor
 getProp rightColor
-	local tColor
-	put the rightColor of me into tColor
-	if tColor is empty then put "201,0,118" into tColor
-	return tColor
+ local tColor
+ put the rightColor of me into tColor
+ if tColor is empty then put "201,0,118" into tColor
+ return tColor
 end rightColor
 
 setProp rightColor pColor
-	set the rightColor of me to pColor
-	updateVisualControls
+ set the rightColor of me to pColor
+ updateVisualControls
 end rightColor
 
 // leftColor
+/**
+Type: Property
+
+Summary: The color of the left background
+
+Syntax: get the leftColor of <widget>
+set the leftColor of <widget> to tColor
+
+Example:put the leftColor of widget "myWidget" into tColor
+set the leftColor of widget "myWidget" to 120,180,190
+Value: a valid color (RGB, Hex, ColorName) or empty
+Description: Use <leftColor> to get or set the backgroundColor of left background
+*/
+
 getProp leftColor
-	local tColor
-	put the leftColor of me into tColor
-	if tColor is empty then put "41,134,204" into tColor
-	return tColor
+ local tColor
+ put the leftColor of me into tColor
+ if tColor is empty then put "41,134,204" into tColor
+ return tColor
 end leftColor
 
 setProp leftColor pColor
-	set the leftColor of me to pColor
-	updateVisualControls
+ set the leftColor of me to pColor
+ updateVisualControls
 end leftColor
 
 // centerColor
+/**
+Type: Property
+Summary: The color of the center background
+Syntax: get the centerColor of <widget>
+set the centerColor of <widget> to tColor
+
+Example:put the centerColor of widget "myWidget" into tColor
+set the centerColor of widget "myWidget" to 120,180,190
+Value: a valid color (RGB, Hex, ColorName) or empty
+Description: Use <centerColor> to get or set the backgroundColor of center background
+*/
 getProp centerColor
-	local tColor
-	put the centerColor of me into tColor
-	if tColor is empty then put "244,246,247" into tColor
-	return tColor
+ local tColor
+ put the centerColor of me into tColor
+ if tColor is empty then put "244,246,247" into tColor
+ return tColor
 end centerColor
 
 setProp centerColor pColor
-	set the centerColor of me to pColor
-	updateVisualControls
+ set the centerColor of me to pColor
+ updateVisualControls
 end centerColor
+
+/**
+Type: Property
+Summary: The color of the indicator
+Syntax: get the indicatorColor of <widget>
+set the indicatorColor of <widget> to tColor
+
+Example:put the indicatorColor of widget "myWidget" into tColor
+set the indicatorColor of widget "myWidget" to 120,180,190
+Value: a valid color (RGB, Hex, ColorName) or empty
+Description: Use <indicatorColor> to get or set the <indicatorColor> of indicator
+*/
 
 // indicatorColor
 getProp indicatorColor
-	local tColor
-	put the indicatorColor of me into tColor
-	if tColor is empty then put "230,232,232" into tColor
-	return tColor
+ local tColor
+ put the indicatorColor of me into tColor
+ if tColor is empty then put "230,232,232" into tColor
+ return tColor
 end indicatorColor
 
 setProp indicatorColor pColor
-	set the indicatorColor of me to pColor
-	updateVisualControls
+ set the indicatorColor of me to pColor
+ updateVisualControls
 end indicatorColor
 
+/**
+Type: Property
+Summary: The switchValue of the widget, either lef, center or right
+Syntax: get the switchValue of <widget>
+set the switchValue of <widget> to {left | center | right}
+
+Example:put the switchValue of widget "myWidget" into tSwitchState
+set the switchValue of widget "myWidget" to "right"
+Value: "left", "center", "right"
+Description: Use <switchValue> to get or set the position of the Indicator.
+*/
 // switchValue
 getProp switchValue
-	local tValue
-	put the switchValue of me into tValue
-	if tValue is empty then put "Center" into tValue
-	return tValue
+ local tValue
+ put the switchValue of me into tValue
+ if tValue is empty then put "Center" into tValue
+ return tValue
 end switchValue
 
 setProp switchValue pValue
-	set the switchValue of me to pValue
-	updateIndicatorForValue
+ set the switchValue of me to pValue
+ updateIndicatorForValue
 end switchValue
 
+/**
+Type: Property
+Summary: The leftText of the widget
+Syntax: get the leftText of <widget>
+set the leftText of <widget> to tText
+
+Example:put the leftText of widget "myWidget" into tText
+set the leftText of widget "myWidget" to "leftPos"
+Value: Text
+Description: use <leftText> to set the text when the indicator is at left.
+Text is only shown when the "hasLabels" property of widget is true
+*/
 // left text
 getProp leftText
-	local tText
-	put the leftText of me into tText
-	if tText is empty then put "Left" into tText
-	return tText
+ local tText
+ put the leftText of me into tText
+ if tText is empty then put "Left" into tText
+ return tText
 end leftText
 
 setProp leftText pText
-	set the leftText of me to pText
-	updateVisualControls
+ set the leftText of me to pText
+ updateVisualControls
 end leftText
+
+/**
+Type: Property
+Summary: The leftTextSmall of the widget
+Syntax: get the leftTextSmall of <widget>
+set the leftTextSmall of <widget> to tText
+Example:put the leftTextSmall of widget "myWidget" into tText
+set the leftTextSmall of widget "myWidget" to "L"
+Value: Text
+Description: use <leftTextSmall> to set the text left of the indicator when the 
+indicator is in center position.
+Typically only a short text is chosen.
+Text is only shown when the "hasLabels" property is of widget is true
+*/
 
 // Left text small
 getProp leftTextSmall
-	local tText
-	put the leftTextSmall of me into tText
-	if tText is empty then put "L" into tText
-	return tText
+ local tText
+ put the leftTextSmall of me into tText
+ if tText is empty then put "L" into tText
+ return tText
 end leftTextSmall
 
 setProp leftTextSmall pText
-	set the leftTextSmall of me to pText
-	updateVisualControls
+ set the leftTextSmall of me to pText
+ updateVisualControls
 end leftTextSmall
 
+/**
+Type: Property
+Summary: The rightText of the widget
+Syntax: get the rightText of <widget>
+set the rightText of <widget> to tText
+Example:put the rightText of widget "myWidget" into tText
+set the rightText of widget "myWidget" to "rightPos"
+Value: Text
+Description: use <rightText> to set the text when the indicator is at right.
+Text is only shown when the "hasLabels" property of widget is true
+*/
 // right text
 getProp rightText
-	local tText
-	put the rightText of me into tText
-	if tText is empty then put "Right" into tText
-	return tText
+ local tText
+ put the rightText of me into tText
+ if tText is empty then put "Right" into tText
+ return tText
 end rightText
 
 setProp rightText pText
-	set the rightText of me to pText
-	updateVisualControls
+ set the rightText of me to pText
+ updateVisualControls
 end rightText
 
+/**
+Type: Property
+Summary: The rightTextSmall of the widget
+Syntax: get the rightTextSmall of <widget>
+set the rightTextSmall of <widget> to tText
+Example:put the rightTextSmall of widget "myWidget" into tText
+set the rightTextSmall of widget "myWidget" to "R"
+Value: Text
+Description: use <rightTextSmall> to set the text right of the indicator when the 
+indicator is in center position.
+Typically only a short text is chosen.
+Text is only shown when the "hasLabels" property of widget is true
+*/
 // Right text small
 getProp rightTextSmall
-	local tText
-	put the rightTextSmall of me into tText
-	if tText is empty then put "R" into tText
-	return tText
+ local tText
+ put the rightTextSmall of me into tText
+ if tText is empty then put "R" into tText
+ return tText
 end rightTextSmall
 
 setProp rightTextSmall pText
-	set the rightTextSmall of me to pText
-	updateVisualControls
+ set the rightTextSmall of me to pText
+ updateVisualControls
 end rightTextSmall
 
+/**
+Type: Property
+Summary: The maximum textSize of the widget
+Syntax: get the maxTextSize of <widget>
+set the maxTextSize of <widget> to Integer
+Example:put the maxTextSize of widget "myWidget" into tNumber
+set the maxTextSize of widget "myWidget" to 30
+Value: Integer
+Description: use <maxTextSize> to set maximum size of the text of the labels of the widget.
+*/
 // max label textSize
 getProp maxTextSize
-	local tSize
-	put the maxTextSize of me into tSize
-	if tSize is empty then put 30 into tSize
-	return tSize
+ local tSize
+ put the maxTextSize of me into tSize
+ if tSize is empty then put 30 into tSize
+ return tSize
 end maxTextSize
 
 setProp maxTextSize pSize
-	set the maxTextSize of me to pSize
-	updateVisualControls
+ set the maxTextSize of me to pSize
+ updateVisualControls
 end maxTextSize
 
+/**
+Type: Property
+Summary: The minimum textSize of the widget
+Syntax: get the minTextSize of <widget>
+set the minTextSize of <widget> to Integer
+Example:put the minTextSize of widget "myWidget" into tNumber
+set the minTextSize of widget "myWidget" to 9
+Value: Integer
+Description: use <minTextSize> to set minimum size of the text of the labels of the widget.
+*/
 // min labeL textSize
 getProp minTextSize
-	local tSize
-	put the minTextSize of me into tSize
-	if tSize is empty then put 9 into tSize
-	return tSize
+ local tSize
+ put the minTextSize of me into tSize
+ if tSize is empty then put 9 into tSize
+ return tSize
 end minTextSize
 
 setProp minTextSize pSize
-	set the minTextSize of me to pSize
-	updateVisualControls
+ set the minTextSize of me to pSize
+ updateVisualControls
 end minTextSize
 
+/**
+Type: Property
+Summary: <hasLabels> determines whether label text is shown or not
+Syntax: get the hasLabels of <widget>
+set the hasLabels of <widget> to true|false
+Example:put the hasLabels of widget "myWidget" into tTrueFalse
+set the hasLabels of widget "myWidget" to false
+Value: boolean true|false
+Description: use <hasLabels> to show or hide the text of the labels of the widget.
+*/
 // hasLabels
 getProp hasLabels
     local tBool
@@ -311,9 +435,9 @@ end hasLabels
 ########################### /PROPERTIES ##########################
 
 on openControl
-	createVisualControls
-	layoutVisualControls
-	updateVisualControls
+ createVisualControls
+ layoutVisualControls
+ updateVisualControls
 end openControl
 
 on resizeControl
@@ -332,7 +456,7 @@ private command createVisualControls
     set the style of control id sBackroundID to "roundRect"
     set the opaque of control id sBackroundID to true
     set the linesize of control id sBackroundID to 1
-    	
+     
     // labels
     set the margins of the templateField to "0,8,0,8"
     set the opaque of the templateField to false
@@ -382,57 +506,57 @@ private command createVisualControls
 end createVisualControls
 
 private command layoutVisualControls ## fix by @BerndN to stop the mesmerising wandering of the indicator...
-	if not sHasCreatedVisuals then exit layoutVisualControls
+ if not sHasCreatedVisuals then exit layoutVisualControls
 
-	local tRect, tDiameter
-	lock screen
-	// background rect
-	put the rect of me into tRect
-	add 2 to item 1 of tRect
-	add 2 to item 2 of tRect
-	subtract 2 from item 3 of tRect
-	subtract 2 from item 4 of tRect
-	set the rect of control id sBackroundID to tRect
-	// indicator rect
-	put the height of control id sBackroundID - 4 into tDiameter
-	set the width of control id sIndicatorID to tDiameter
-	set the height of control id sIndicatorID to tDiameter
+ local tRect, tDiameter
+ lock screen
+ // background rect
+ put the rect of me into tRect
+ add 2 to item 1 of tRect
+ add 2 to item 2 of tRect
+ subtract 2 from item 3 of tRect
+ subtract 2 from item 4 of tRect
+ set the rect of control id sBackroundID to tRect
+ // indicator rect
+ put the height of control id sBackroundID - 4 into tDiameter
+ set the width of control id sIndicatorID to tDiameter
+ set the height of control id sIndicatorID to tDiameter
 
-	## resize the indicator in current location
-	switch the switchValue of me
-		case "Left"
-			set the left of control id sIndicatorID to the left of control id sBackroundID + 2
-			set the top of control id sIndicatorID to the top of control id sBackroundID + 2
-			break
-		case "Center"
-			set the loc of control id sIndicatorID to the loc of control id sBackroundID
-			break
-		case "Right"
-			set the right of control id sIndicatorID to the right of control id sBackroundID - 2
-			set the top of control id sIndicatorID to the top of control id sBackroundID + 2
-			break
-	end switch
-	set the roundRadius of control id sBackroundID to tDiameter
+ ## resize the indicator in current location
+ switch the switchValue of me
+  case "Left"
+   set the left of control id sIndicatorID to the left of control id sBackroundID + 2
+   set the top of control id sIndicatorID to the top of control id sBackroundID + 2
+   break
+  case "Center"
+   set the loc of control id sIndicatorID to the loc of control id sBackroundID
+   break
+  case "Right"
+   set the right of control id sIndicatorID to the right of control id sBackroundID - 2
+   set the top of control id sIndicatorID to the top of control id sBackroundID + 2
+   break
+ end switch
+ set the roundRadius of control id sBackroundID to tDiameter
 
-	if the mouse is up then updateIndicatorForValue
+ if the mouse is up then updateIndicatorForValue
 end layoutVisualControls
 
 private command updateVisualControls
-	if not sHasCreatedVisuals then exit updateVisualControls
-	switch the switchValue of me
-		case "Left"
-			set the backgroundColor of control id sBackroundID to the leftColor of me
-			break
-		case "Center"
-			set the backgroundColor of control id sBackroundID to the centerColor of me
-			break
-		case "Right"
-			set the backgroundColor of control id sBackroundID to the rightColor of me
-			break
-	end switch
-	set the backgroundColor of control id sIndicatorID to the indicatorColor of me
+ if not sHasCreatedVisuals then exit updateVisualControls
+ switch the switchValue of me
+  case "Left"
+   set the backgroundColor of control id sBackroundID to the leftColor of me
+   break
+  case "Center"
+   set the backgroundColor of control id sBackroundID to the centerColor of me
+   break
+  case "Right"
+   set the backgroundColor of control id sBackroundID to the rightColor of me
+   break
+ end switch
+ set the backgroundColor of control id sIndicatorID to the indicatorColor of me
     // display and set text labels
-	formatTextFields
+ formatTextFields
 end updateVisualControls
 
 
@@ -515,7 +639,7 @@ private command formatFieldText pSize, pControlID
    set the textColor of control id pControlID to textColorForBackground(the backgroundColor of control id sBackroundID)
    set the textSize of control id pControlID to pSize
  
-   ## trying to keep text vertially centered
+   ## trying to keep text vertially centered -- @BerndN
    put the effective textHeight of control id pControlID into tTextHeight
    put item 2 of the loc of control id pControlID into tfieldY
    
@@ -535,7 +659,7 @@ end formatFieldText
 private command updateIndicatorForValue
     local tX
     if not sHasCreatedVisuals then exit updateIndicatorForValue
-    	
+     
     switch the switchValue of me
         case "Left"
             set the backgroundColor of control id sBackroundID to the leftColor of me
@@ -558,49 +682,49 @@ private command updateIndicatorForValue
 end updateIndicatorForValue
 
 on mouseDown
-	if the mouseLoc is within the rect of control id sIndicatorID then
-		put true into sClickedIndicator
-		put the mouseH into sMouseX
-	end if
-	pass mouseDown
+ if the mouseLoc is within the rect of control id sIndicatorID then
+  put true into sClickedIndicator
+  put the mouseH into sMouseX
+ end if
+ pass mouseDown
 end mouseDown
 
 on mouseUp pKey
-	local tSegmentClicked, tRect, tR1, tR2, tR3, t3
-	if sClickedIndicator then   // drag indicator 1 step in drag direction
-		local tValue
-		put the switchValue of me into tValue
-		if the mouseH - sMouseX > 0 and tValue is "Left" then // go right
-			put "Center" into tValue
-		else if the mouseH - sMouseX > 0 and tValue is "Center" then // go right
-			put "Right" into tValue
-		else if the mouseH - sMouseX < 0 and tValue is "Right" then //go left
-			put "Center" into tValue
-		else if the mouseH - sMouseX < 0 and tValue is "Center" then //go left
-			put "Left" into tValue
-		end if
-		set the switchValue of me to tValue
-	else                        // establish 3 click zones to see if left, centre or right
-		put the width of control id sBackroundID / 3 into t3
-		put the rect of control id sBackroundID into tR1
-		put item 1 of tR1 + t3 into item 3 of tR1
-		put tR1 into tR2
-		add t3 to item 1 of tR2
-		add t3 to item 3 of tR2
-		put tR2 into tR3
-		add t3 to item 1 of tR3
-		add t3 to item 3 of tR3
-		// apply value based on click zone
-		if the mouseLoc is within tR1 then
-			set the switchValue of me to "Left"
-		else if the mouseLoc is within tR2 then
-			set the switchValue of me to "Center"
-		else if the mouseLoc is within tR3 then
-			set the switchValue of me to "Right"
-		end if
-	end if
-	put false into sClickedIndicator
-	put empty into sMouseX
+ local tSegmentClicked, tRect, tR1, tR2, tR3, t3
+ if sClickedIndicator then   // drag indicator 1 step in drag direction
+  local tValue
+  put the switchValue of me into tValue
+  if the mouseH - sMouseX > 0 and tValue is "Left" then // go right
+   put "Center" into tValue
+  else if the mouseH - sMouseX > 0 and tValue is "Center" then // go right
+   put "Right" into tValue
+  else if the mouseH - sMouseX < 0 and tValue is "Right" then //go left
+   put "Center" into tValue
+  else if the mouseH - sMouseX < 0 and tValue is "Center" then //go left
+   put "Left" into tValue
+  end if
+  set the switchValue of me to tValue
+ else                        // establish 3 click zones to see if left, centre or right
+  put the width of control id sBackroundID / 3 into t3
+  put the rect of control id sBackroundID into tR1
+  put item 1 of tR1 + t3 into item 3 of tR1
+  put tR1 into tR2
+  add t3 to item 1 of tR2
+  add t3 to item 3 of tR2
+  put tR2 into tR3
+  add t3 to item 1 of tR3
+  add t3 to item 3 of tR3
+  // apply value based on click zone
+  if the mouseLoc is within tR1 then
+   set the switchValue of me to "Left"
+  else if the mouseLoc is within tR2 then
+   set the switchValue of me to "Center"
+  else if the mouseLoc is within tR3 then
+   set the switchValue of me to "Right"
+  end if
+ end if
+ put false into sClickedIndicator
+ put empty into sMouseX
 end mouseUp
 
 on mouseRelease
