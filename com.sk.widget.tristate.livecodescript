@@ -125,10 +125,6 @@ getProp propertyMetadata[pProperty]
     end switch
 end propertyMetadata
 
-
-local sHasCreatedVisuals, sMouseX, sClickedIndicator
-local sBackroundID, sIndicatorID, sTextLeftID, sTextRightID, sTextLongID
-
 ########################### PROPERTIES ###########################
 
 /**
@@ -254,7 +250,7 @@ end switchValue
 
 setProp switchValue pValue
  set the switchValue of me to pValue
- updateIndicatorForValue
+ updateIndicator
 end switchValue
 
 /**
@@ -434,6 +430,9 @@ end hasLabels
 
 ########################### /PROPERTIES ##########################
 
+local sHasCreatedVisuals, sClickedIndicator, sMouseX
+local sBackroundID, sIndicatorID, sTextLongID, sTextLeftID, sTextRightID
+
 on openControl
  createVisualControls
  layoutVisualControls
@@ -538,7 +537,7 @@ private command layoutVisualControls ## fix by @BerndN to stop the mesmerising w
  end switch
  set the roundRadius of control id sBackroundID to tDiameter
 
- if the mouse is up then updateIndicatorForValue
+ if the mouse is up then updateIndicator
 end layoutVisualControls
 
 private command updateVisualControls
@@ -639,7 +638,7 @@ private command formatFieldText pSize, pControlID
    set the textColor of control id pControlID to textColorForBackground(the backgroundColor of control id sBackroundID)
    set the textSize of control id pControlID to pSize
  
-   ## trying to keep text vertially centered -- @BerndN
+   ## trying to keep text vertially centered -- code courtesy of @BerndN
    put the effective textHeight of control id pControlID into tTextHeight
    put item 2 of the loc of control id pControlID into tfieldY
    
@@ -656,9 +655,9 @@ private command formatFieldText pSize, pControlID
 end formatFieldText
 
 
-private command updateIndicatorForValue
+private command updateIndicator
     local tX
-    if not sHasCreatedVisuals then exit updateIndicatorForValue
+    if not sHasCreatedVisuals then exit updateIndicator
      
     switch the switchValue of me
         case "Left"
@@ -679,7 +678,9 @@ private command updateIndicatorForValue
             break
     end switch
     formatTextFields
-end updateIndicatorForValue
+    dispatch "triStateChanged" to the owner of me with the switchValue of me, the id of me
+end updateIndicator
+
 
 on mouseDown
  if the mouseLoc is within the rect of control id sIndicatorID then
