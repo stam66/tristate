@@ -1,7 +1,7 @@
 # Tri-state control widget
 LiveCode widget - tri-state control (requires LC 10 DP5 or higher)
 
-Current version: 1.0.42 - see [changelog](/changelog.md)<br>
+Current version: 1.0.43 - see [changelog](/changelog.md)<br>
 A special thankyou to @BerndN for his invaluable contributions!
 
 ## Tri-state Switch control (script widget external)
