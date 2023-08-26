@@ -1,9 +1,9 @@
 script "com.sk.widget.tristate"
 /**
-Title: Tri-state switch 1.0.42
+Title: Tri-state switch 1.0.43
 
 Author: Stam Kapetanakis
-Version: 1.0.42
+Version: 1.0.43
 Type: Widget
 
 SVGIcon: M75.1875 98.9688C60.0318 98.9687 47.7188 111.251 47.7188 126.406L47.7188 128.688C47.7187 143.843 60.0318 156.125 75.1875 156.125L152.406 156.125C167.562 156.125 179.844 143.843 179.844 128.688L179.844 126.406C179.844 111.251 167.562 98.9688 152.406 98.9688L75.1875 98.9688ZM113.781 101.062C128.417 101.062 140.281 112.927 140.281 127.562C140.281 142.198 128.417 154.063 113.781 154.062C99.1457 154.062 87.2813 142.198 87.2812 127.562C87.2812 112.927 99.1457 101.062 113.781 101.062Z
@@ -430,13 +430,15 @@ end hasLabels
 
 ########################### /PROPERTIES ##########################
 
-local sHasCreatedVisuals, sClickedIndicator, sMouseX
+local sHasCreatedVisuals, sClickedIndicator, sMouseX, sIsOpening
 local sBackroundID, sIndicatorID, sTextLongID, sTextLeftID, sTextRightID
 
 on openControl
- createVisualControls
- layoutVisualControls
- updateVisualControls
+    if there is a control 1 of me then exit openControl
+    put true into sIsOpening
+    createVisualControls
+    layoutVisualControls
+    updateVisualControls
 end openControl
 
 on resizeControl
@@ -663,22 +665,34 @@ private command updateIndicator
         case "Left"
             set the backgroundColor of control id sBackroundID to the leftColor of me
             put the left of control id sBackroundID + 3 + the width of control id sIndicatorID / 2 into tX
-            move control id sIndicatorID to tX, item 2 of the loc of control id sBackroundID in 200 milliseconds
+            if sIsOpening then
+                set the loc of control id sIndicatorID to tX, item 2 of the loc of control id sBackroundID
+            else
+                move control id sIndicatorID to tX, item 2 of the loc of control id sBackroundID in 200 milliseconds
+            end if
             set the left of control id sIndicatorID to the left of control id sBackroundID + 2
             break
         case "Center"
             set the backgroundColor of control id sBackroundID to the centerColor of me
-            move control id sIndicatorID to the loc of control id sBackroundID in 200 milliseconds
+            if sIsOpening then
+                set the loc of control id sIndicatorID to the loc of control id sBackroundID
+            else
+                move control id sIndicatorID to the loc of control id sBackroundID in 200 milliseconds
+            end if
             break
         case "Right"
             set the backgroundColor of control id sBackroundID to the rightColor of me
             put the right of control id sBackroundID - 3 - the width of control id sIndicatorID / 2 into tX
-            move control id sIndicatorID to tX, item 2 of the loc of control id sBackroundID in 200 milliseconds
+            if sIsOpening then
+                set the loc of control id sIndicatorID to tX, item 2 of the loc of control id sBackroundID
+            else
+                move control id sIndicatorID to tX, item 2 of the loc of control id sBackroundID in 200 milliseconds
+            end if
             set the right of control id sIndicatorID to the right of control id sBackroundID - 2
             break
     end switch
     formatTextFields
-    dispatch "triStateChanged" to the owner of me with the switchValue of me, the id of me
+    dispatch "triStateChanged" to me with the switchValue of me, the id of me
 end updateIndicator
 
 
