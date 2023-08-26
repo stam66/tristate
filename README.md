@@ -18,4 +18,4 @@ Created with the new script widget facility and requires LiveCode 10.0 DP5 or hi
 Use the Extension Manager (Tools menu) to install the widget (the .lce file). After installation an new icon appears in the Tools palette and the Dictionary will include a short API.
 
 Sourcecode and widget available under MIT licence.
-To build the extension from source,follow the instructions at the end of the lesson: https://lessons.livecode.com/m/98525/l/1672543-creating-a-script-widget
+To build the extension from source, follow the instructions at the end of the lesson: https://lessons.livecode.com/m/98525/l/1672543-creating-a-script-widget
