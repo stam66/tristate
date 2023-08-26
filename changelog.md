@@ -1,3 +1,6 @@
+### Changes in version 1.0.43 <br>
+Fix for slow initalisation provided by @BerndN (thank you!)
+
 ### Changes in version 1.0.42 <br>
 Minor update to include code by @BerndN for improvements in Properties documentation for the LiveCode Dictionary
 
