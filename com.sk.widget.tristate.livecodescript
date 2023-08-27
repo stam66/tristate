@@ -1,9 +1,9 @@
 script "com.sk.widget.tristate"
 /**
-Title: Tri-state switch 1.0.43
+Title: Tri-state switch 1.0.44
 
 Author: Stam Kapetanakis
-Version: 1.0.43
+Version: 1.0.44
 Type: Widget
 
 SVGIcon: M75.1875 98.9688C60.0318 98.9687 47.7188 111.251 47.7188 126.406L47.7188 128.688C47.7187 143.843 60.0318 156.125 75.1875 156.125L152.406 156.125C167.562 156.125 179.844 143.843 179.844 128.688L179.844 126.406C179.844 111.251 167.562 98.9688 152.406 98.9688L75.1875 98.9688ZM113.781 101.062C128.417 101.062 140.281 112.927 140.281 127.562C140.281 142.198 128.417 154.063 113.781 154.062C99.1457 154.062 87.2813 142.198 87.2812 127.562C87.2812 112.927 99.1457 101.062 113.781 101.062Z
@@ -430,7 +430,7 @@ end hasLabels
 
 ########################### /PROPERTIES ##########################
 
-local sHasCreatedVisuals, sClickedIndicator, sMouseX, sIsOpening
+local sHasCreatedVisuals, sClickedIndicator, sMouseX, sIsOpening, sPreviousValue
 local sBackroundID, sIndicatorID, sTextLongID, sTextLeftID, sTextRightID
 
 on openControl
@@ -439,6 +439,7 @@ on openControl
     createVisualControls
     layoutVisualControls
     updateVisualControls
+    put false into sIsOpening
 end openControl
 
 on resizeControl
@@ -656,6 +657,26 @@ private command formatFieldText pSize, pControlID
    ## end trying to keep text vertically centered
 end formatFieldText
 
+**
+Type: Message
+Summary: <triStateChanged> is sent to the owner of the widget when user changes state
+
+Syntax: triStateChanged { left | center | right }, { the id of the sender }
+Example:on triStateChanged pWhichWay, pSenderID
+  put pWichWayy && pSenderId
+end triStateChanged
+
+Parameters:
+Param1: text: left|center|right
+Param2: ID: the short id of sender
+Description: use <triStateChanged> message to react to user action on widget.
+Put the handler one level higher than the widget:
+If widget is placed on a card use card script to trap the <triStateChanged> message
+*/
+
+on triStateChanged
+    -- fake handler for dictionary entry on triStateChanged emitted in updateIndicator
+end triStateChanged 
 
 private command updateIndicator
     local tX
@@ -692,7 +713,9 @@ private command updateIndicator
             break
     end switch
     formatTextFields
-    dispatch "triStateChanged" to me with the switchValue of me, the id of me
+    if not sIsOpening and sPreviousValue <> the switchValue of me then 
+        dispatch "triStateChanged" to the owner of me with the switchValue of me, the id of me
+    end if
 end updateIndicator
 
 
@@ -701,6 +724,7 @@ on mouseDown
   put true into sClickedIndicator
   put the mouseH into sMouseX
  end if
+ put the switchValue of me into sPreviousValue
  pass mouseDown
 end mouseDown
 
@@ -740,6 +764,7 @@ on mouseUp pKey
  end if
  put false into sClickedIndicator
  put empty into sMouseX
+ put empty into sPreviousValue
 end mouseUp
 
 on mouseRelease
@@ -759,6 +784,7 @@ on mouseRelease
     set the switchValue of me to tValue
     put false into sClickedIndicator
     put empty into sMouseX
+    put empty into sPreviousValue
 end mouseRelease
 
 # return dark textColor for light backgrounds & vice versa
