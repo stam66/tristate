@@ -5,7 +5,8 @@ Current version: 1.0.44 - see [changelog](/changelog.md)<br>
 A special thankyou to @BerndN for his invaluable contributions!
 
 ## Tri-state Switch control (script widget external)
-<img width="374" alt="Tristate switch examples" src="https://github.com/stam66/tristate/assets/5677273/e66f3b4e-e1af-4d7d-b229-7cb73ae4f5b4">
+<img width="604" alt="Screenshot 2023-08-27 at 10 34 24" src="https://github.com/stam66/tristate/assets/5677273/4bc37c4e-29ca-4755-90d6-7ee10e8258c6">
+
 
 
 An alternative to the built-in switch widget which offers a trinary instead of binary choice.
