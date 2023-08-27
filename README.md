@@ -16,7 +16,7 @@ An alternative to the built-in switch widget which offers a trinary instead of b
 - Properties are settable directly in the Basic, Contents, Colors and Text panels of its property inspector.
 
 Created with the new script widget facility and requires LiveCode 10.0 DP5 or higher.
-Use the Extension Manager (Tools menu) to install the widget (the .lce file). After installation an new icon appears in the Tools palette and the Dictionary will include a short API.
+Use the Extension Manager (Tools menu) to install the widget (the .lce file). After installation an new icon appears in the Tools palette and it's API will appear in the dictionary.
 
 Sourcecode and widget available under MIT licence.
 To build the extension from source, follow the instructions at the end of the lesson: https://lessons.livecode.com/m/98525/l/1672543-creating-a-script-widget
