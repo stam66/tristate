@@ -674,7 +674,7 @@ Put the handler one level higher than the widget:
 If widget is placed on a card use card script to trap the <triStateChanged> message
 */
 
-on triStateChanged
+on triStateChanged -- @BerndN
     -- fake handler for dictionary entry on triStateChanged emitted in updateIndicator
 end triStateChanged 
 
