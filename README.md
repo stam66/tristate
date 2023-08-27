@@ -1,5 +1,5 @@
 # Tri-state control widget
-LiveCode widget - tri-state control (requires LC 10 DP5 or higher)
+LiveCode widget - tristate switch control (requires LC 10 DP5 or higher)
 
 Current version: 1.0.44 - see [changelog](/changelog.md)<br>
 A special thankyou to @BerndN for his invaluable contributions!
