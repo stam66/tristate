@@ -657,7 +657,7 @@ private command formatFieldText pSize, pControlID
    ## end trying to keep text vertically centered
 end formatFieldText
 
-**
+/**
 Type: Message
 Summary: <triStateChanged> is sent to the owner of the widget when user changes state
 
