@@ -1,4 +1,4 @@
-### Changes in version 1.0.43 <br>
+### Changes in version 1.0.43 -- code complete <br>
 - Stopped _triStateChanged_ firing on initialisation -- @BerndN
 - Proper dictionary entry for the _triStateChanged_ message -- @BerndN
 - Stopped _triStateChanged_ firing on clicking without changing state
