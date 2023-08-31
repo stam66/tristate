@@ -1,7 +1,7 @@
 # Tristate switch control widget
 LiveCode widget - tristate switch control (requires LC 10 DP5 or higher)
 
-Current version: 1.0.44 - see [changelog](/changelog.md)<br>
+Current version: 1.0.4t - see [changelog](/changelog.md)<br>
 A special thankyou to @BerndN for his invaluable contributions!
 
 ## Tri-state Switch control (script widget external)
@@ -12,7 +12,7 @@ A special thankyou to @BerndN for his invaluable contributions!
 An alternative to the built-in switch widget which offers a trinary instead of binary choice.
 - Optionally show inline labels which are scaled and coloured automatically.
 - Different background colours can be assigned depending on state (left/center/right)
-- A _tristateChanged_ message is sent up the object hierarchy if change needs to be captured for processing
+- A _tristateChanged_ message is sent up the object hierarchy if change needs to be captured for processing. Call within widget's script or parent object's script.
 - Properties are settable directly in the Basic, Contents, Colors and Text panels of its property inspector.
 
 Created with the new script widget facility and requires LiveCode 10.0 DP5 or higher.
