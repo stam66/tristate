@@ -1,7 +1,7 @@
 script "com.sk.widget.tristate"
 /**
 Title: Tri-state switch 1.0.45
-
+ 
 Author: Stam Kapetanakis
 Version: 1.0.45
 Type: Widget
