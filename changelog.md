@@ -1,3 +1,10 @@
+### Changes in 1.0.45 <br>
+- Further changes to triStateChanged message: the 'id' parameter is removed as can be called directly with the widget's script
+- Attempt at adding handler to dispatch a commmand to the widget - not functional at present
+
+### Changes in version 1.0.44 <br>
+- Fix for dictionary entry of the triStateChanged message - a missing "/"!
+
 ### Changes in version 1.0.43 -- code complete <br>
 - Stopped _triStateChanged_ firing on initialisation -- @BerndN
 - Proper dictionary entry for the _triStateChanged_ message -- @BerndN
