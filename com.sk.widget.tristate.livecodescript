@@ -1,9 +1,9 @@
 script "com.sk.widget.tristate"
 /**
-Title: Tri-state switch 1.0.44
+Title: Tri-state switch 1.0.45
 
 Author: Stam Kapetanakis
-Version: 1.0.44
+Version: 1.0.45
 Type: Widget
 
 SVGIcon: M75.1875 98.9688C60.0318 98.9687 47.7188 111.251 47.7188 126.406L47.7188 128.688C47.7187 143.843 60.0318 156.125 75.1875 156.125L152.406 156.125C167.562 156.125 179.844 143.843 179.844 128.688L179.844 126.406C179.844 111.251 167.562 98.9688 152.406 98.9688L75.1875 98.9688ZM113.781 101.062C128.417 101.062 140.281 112.927 140.281 127.562C140.281 142.198 128.417 154.063 113.781 154.062C99.1457 154.062 87.2813 142.198 87.2812 127.562C87.2812 112.927 99.1457 101.062 113.781 101.062Z
@@ -659,22 +659,20 @@ end formatFieldText
 
 /**
 Type: Message
-Summary: <triStateChanged> is sent to the owner of the widget when user changes state
+Summary: <triStateChanged> is dispatched when user changes state
 
-Syntax: triStateChanged { left | center | right }, { the id of the sender }
-Example:on triStateChanged pWhichWay, pSenderID
-  put pWichWayy && pSenderId
+Syntax: triStateChanged { left | center | right }
+Example:on triStateChanged pSwitchValue
+  put putSwitchValue
 end triStateChanged
 
 Parameters:
-Param1: text: left|center|right
-Param2: ID: the short id of sender
-Description: use <triStateChanged> message to react to user action on widget.
-Put the handler one level higher than the widget:
-If widget is placed on a card use card script to trap the <triStateChanged> message
+pSwitchValue: text: left|center|right
+Description: use <triStateChanged> message to react to user action on widget, within the widget's script editor. 
+The switchValue of the widget is passed as a parameter.
 */
 
-on triStateChanged -- @BerndN
+on triStateChanged pSwitchValue
     -- fake handler for dictionary entry on triStateChanged emitted in updateIndicator
 end triStateChanged 
 
@@ -718,6 +716,21 @@ private command updateIndicator
     end if
 end updateIndicator
 
+/**
+Type: Command
+Summary: Use <setTriState> to set the state of the widget by script
+
+Syntax: setTriState { left | center | right }
+Example: dispatch "setTriState" to widget "tristate" with pState
+
+Parameters:
+pState (text): left|center|right
+Description: dispatch <setTriState> to a tristate widget to set the position of the indicator to left, center or right
+*/
+
+command setTriState pState
+    set the switchValue of the owner of me to pState // doesn't work; set the switchValue of me doens't work either
+end setTriState
 
 on mouseDown
  if the mouseLoc is within the rect of control id sIndicatorID then
