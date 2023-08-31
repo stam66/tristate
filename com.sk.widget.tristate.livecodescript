@@ -663,7 +663,7 @@ Summary: <triStateChanged> is dispatched when user changes state
 
 Syntax: triStateChanged { left | center | right }
 Example:on triStateChanged pSwitchValue
-  put putSwitchValue
+  put pSwitchValue
 end triStateChanged
 
 Parameters:
@@ -729,7 +729,7 @@ Description: dispatch <setTriState> to a tristate widget to set the position of 
 */
 
 command setTriState pState
-    set the switchValue of the owner of me to pState // doesn't work; set the switchValue of me doens't work either
+    set the switchValue of the owner of me to pState
 end setTriState
 
 on mouseDown
